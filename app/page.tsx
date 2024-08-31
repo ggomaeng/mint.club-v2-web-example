@@ -1,6 +1,7 @@
 "use client";
 import { useConnectModal } from "@rainbow-me/rainbowkit";
 import { mintclub, wei } from "mint.club-v2-sdk";
+import { base } from "viem/chains";
 import { useAccount, useDisconnect, useWalletClient } from "wagmi";
 
 export default function Home() {
@@ -28,7 +29,11 @@ export default function Home() {
               className="border border-white"
               onClick={() => {
                 mintclub
-                  .withWalletClient(walletClient as any)
+                  .withWalletClient({
+                    ...walletClient,
+                    // there are cases when the chain is not set in the wallet client
+                    chain: base,
+                  } as any)
                   .network("base")
                   .token("CHICKEN")
                   .buy({
